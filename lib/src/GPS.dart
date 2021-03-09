@@ -45,7 +45,7 @@ class _MapState extends State<GPS_tracker> {
   void _onMapTypeButtonPressed() {
     setState(() {
       _currentMapType = _currentMapType == MapType.normal
-          ? MapType.satellite
+          ? MapType.hybrid
           : MapType.normal;
     });
   }
@@ -77,14 +77,19 @@ class _MapState extends State<GPS_tracker> {
       onPressed: function,
       child: icon,
       shape: new CircleBorder(),
-      elevation: 2.0,
+      elevation: 5.0,
       fillColor: color,
-      padding: const EdgeInsets.all(7.0),
+      padding: const EdgeInsets.all(5.0),
     );
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("GPS TRACKER"),
+      ),
       body: _initialPosition == null ? Container(child: Center(child:Text('loading map..', style: TextStyle(fontFamily: 'Avenir-Medium', color: Colors.grey[400]),),),) : Container(
         child: Stack(children: <Widget>[
           GoogleMap(
@@ -99,33 +104,33 @@ class _MapState extends State<GPS_tracker> {
             zoomGesturesEnabled: true,
             onCameraMove: _onCameraMove,
             myLocationEnabled: true,
-            compassEnabled: true,
-            myLocationButtonEnabled: false,
+            compassEnabled: false,
+            //myLocationButtonEnabled: true,
 
           ),
+
           Align(
             alignment: Alignment.topRight,
             child: Container(
-                margin: EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
+                margin: EdgeInsets.fromLTRB(0.0, 15.0, 305.0, 0.0),
                 child: Column(
                   children: <Widget>[
-                    mapButton(_onAddMarkerButtonPressed,
-                        Icon(
-                            Icons.add_location
-                        ), Colors.blue),
                     mapButton(
                         _onMapTypeButtonPressed,
                         Icon(
-                          IconData(0xf473,
+                          IconData(62694,
                               fontFamily: CupertinoIcons.iconFont,
                               fontPackage: CupertinoIcons.iconFontPackage),
                         ),
-                        Colors.green),
+                        Colors.lightBlueAccent),
                   ],
                 )),
           )
+
         ]),
+
       ),
+
     );
   }
 }
