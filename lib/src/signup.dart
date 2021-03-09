@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hi_world/src/GPS.dart';
 import 'package:hi_world/src/Widget/bezierContainer.dart';
 import 'package:hi_world/src/loginPage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +17,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  String _email, _password;
+  final auth = FirebaseAuth.instance;
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -35,36 +40,10 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextField(
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true))
-        ],
-      ),
-    );
-  }
 
   Widget _submitButton() {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
-      },
+      onTap: () => _signup(_email, _password),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 15),
@@ -150,11 +129,44 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username"),
-        _entryField("Email id"),
-        _entryField("Password", isPassword: true),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              hintText: 'Email'
+            ),
+            onChanged: (value){
+              _email = value.trim();
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: 'Password'
+            ),
+            onChanged: (value){
+              _password = value.trim();
+            },
+          ),
+        ),
       ],
     );
+  }
+
+  _signup(String _email, String _password) async{
+    try{
+      await auth.createUserWithEmailAndPassword(email: _email, password: _password);
+
+      //NEU THANH CONG
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    } on FirebaseAuthException catch (error){
+      Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.TOP);
+    }
   }
 
   @override

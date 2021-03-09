@@ -15,7 +15,7 @@ class _MapState extends State<GPS_tracker> {
   Completer<GoogleMapController> controller1;
 
   //static LatLng _center = LatLng(-15.4630239974464, 28.363397732282127);
-  static LatLng _initialPosition;
+  static LatLng _initialPosition = LatLng(-15.4630239974464, 28.363397732282127);
   final Set<Marker> _markers = {};
   static  LatLng _lastMapPosition = _initialPosition;
 
@@ -40,13 +40,13 @@ class _MapState extends State<GPS_tracker> {
     });
   }
 
-  MapType _currentMapType = MapType.normal;
+  MapType _currentMapType = MapType.hybrid;
 
   void _onMapTypeButtonPressed() {
     setState(() {
-      _currentMapType = _currentMapType == MapType.normal
-          ? MapType.hybrid
-          : MapType.normal;
+      _currentMapType = _currentMapType == MapType.hybrid
+          ? MapType.normal
+          : MapType.hybrid;
     });
   }
 
@@ -54,24 +54,7 @@ class _MapState extends State<GPS_tracker> {
     _lastMapPosition = position.target;
   }
 
-  _onAddMarkerButtonPressed() {
-    setState(() {
-      _markers.add(
-          Marker(
-              markerId: MarkerId(_lastMapPosition.toString()),
-              position: _lastMapPosition,
-              infoWindow: InfoWindow(
-                  title: "Pizza Parlour",
-                  snippet: "This is a snippet",
-                  onTap: (){
-                  }
-              ),
-              onTap: (){
-              },
 
-              icon: BitmapDescriptor.defaultMarker));
-    });
-  }
   Widget mapButton(Function function, Icon icon, Color color) {
     return RawMaterialButton(
       onPressed: function,
@@ -105,8 +88,7 @@ class _MapState extends State<GPS_tracker> {
             onCameraMove: _onCameraMove,
             myLocationEnabled: true,
             compassEnabled: false,
-            //myLocationButtonEnabled: true,
-
+            myLocationButtonEnabled: true,
           ),
 
           Align(
