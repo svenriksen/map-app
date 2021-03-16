@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hi_world/src/GPS.dart';
+import 'package:hi_world/src/UserPage.dart';
 import 'package:hi_world/src/signup.dart';
+import 'package:hi_world/src/Global.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hi_world/src/welcomePage.dart';
 
@@ -123,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
             TextSpan(
-              text: 'gay',
+              text: 'yag',
               style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
             ),
           ]),
@@ -165,10 +166,10 @@ class _LoginPageState extends State<LoginPage> {
   _signin(String _email, String _password) async{
     try{
        await auth.signInWithEmailAndPassword(email: _email, password: _password);
-
+        Credentials.email = _email;
       //NEU THANH CONG
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => GPS_tracker()));
+          context, MaterialPageRoute(builder: (context) => UserPage()));
     } on FirebaseAuthException catch (error){
       Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.TOP);
     }

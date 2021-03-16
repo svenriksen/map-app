@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hi_world/src/loginPage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 // ignore: camel_case_types
@@ -66,18 +65,13 @@ class _MapState extends State<GPS_tracker> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("GPS TRACKER"),
-      ),
       body: _initialPosition == null ? Container(child: Center(child:Text('loading map..', style: TextStyle(fontFamily: 'Avenir-Medium', color: Colors.grey[400]),),),) : Container(
         child: Stack(children: <Widget>[
           GoogleMap(
             markers: _markers,
-
             mapType: _currentMapType,
             initialCameraPosition: CameraPosition(
               target: _initialPosition,
@@ -110,9 +104,9 @@ class _MapState extends State<GPS_tracker> {
           )
 
         ]),
-
       ),
-
     );
   }
+
 }
+

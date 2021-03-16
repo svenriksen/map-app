@@ -5,6 +5,7 @@ import 'package:hi_world/src/GPS.dart';
 import 'package:hi_world/src/Widget/bezierContainer.dart';
 import 'package:hi_world/src/loginPage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hi_world/src/Global.dart';
 
 
 class SignUpPage extends StatefulWidget {
@@ -126,7 +127,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _emailPasswordWidget() {
+  Widget _emailPasswordNameWidget() {
     return Column(
       children: <Widget>[
         Padding(
@@ -150,6 +151,18 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             onChanged: (value){
               _password = value.trim();
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+                hintText: 'Your Name'
+            ),
+            onChanged: (value){
+               Credentials.name = value.trim();
             },
           ),
         ),
@@ -192,9 +205,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(height: height * .2),
                     _title(),
                     SizedBox(
-                      height: 50,
+                      height: 20,
                     ),
-                    _emailPasswordWidget(),
+                    _emailPasswordNameWidget(),
                     SizedBox(
                       height: 20,
                     ),
