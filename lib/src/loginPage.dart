@@ -163,10 +163,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
   // /*
+  String Extract(String str){
+    String res = "";
+    int i = 0;
+    while(str[i] != "@") {
+      res += str[i];
+      ++i;
+    }
+    return res;
+  }
   _signin(String _email, String _password) async{
     try{
        await auth.signInWithEmailAndPassword(email: _email, password: _password);
         Credentials.email = _email;
+        Credentials.name = Extract(Credentials.email);
       //NEU THANH CONG
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => UserPage()));

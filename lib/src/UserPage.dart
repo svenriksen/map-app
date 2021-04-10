@@ -14,6 +14,7 @@ class UserPage_State extends State<UserPage> {
   int selectedIndex = 0;
   Widget _myMap = GPS_tracker();
   Widget _myProfile = MyProfile();
+  Widget _myOtherUsers = OtherUsers();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,10 @@ class UserPage_State extends State<UserPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             title: Text("Profile"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+            title: Text("Other Users"),
           )
         ],
         onTap: (int index) {
@@ -48,6 +53,8 @@ class UserPage_State extends State<UserPage> {
       return this._myMap;
     } else if(this.selectedIndex == 1)
       return this._myProfile;
+    else
+      return this._myOtherUsers;
   }
 
   void onTapHandler(int index)  {

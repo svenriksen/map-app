@@ -154,18 +154,6 @@ class _SignUpPageState extends State<SignUpPage> {
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-                hintText: 'Your Name'
-            ),
-            onChanged: (value){
-               Credentials.name = value.trim();
-            },
-          ),
-        ),
       ],
     );
   }
