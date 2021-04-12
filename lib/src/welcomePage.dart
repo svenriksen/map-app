@@ -7,6 +7,7 @@ import 'package:hi_world/src/Global.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hi_world/src/loginPage.dart';
+import 'package:hi_world/src/welcomeComponents/body.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);
@@ -156,7 +157,7 @@ class _WelcomePageState extends State<WelcomePage> {
       password = prefs.getString('password');
     });
 
-    if (prefs.containsKey('username') || prefs.containsKey('password')) {
+    if (prefs.containsKey('username') && prefs.containsKey('password')) {
       try {
         await auth.signInWithEmailAndPassword(
             email: username, password: password);
@@ -176,46 +177,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    autoSignin();
+    //autoSignin();
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
-              ],
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xfffbb448), Color(0xffe46b10)])),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _title(),
-              SizedBox(
-                height: 80,
-              ),
-              _submitButton(),
-              SizedBox(
-                height: 20,
-              ),
-              _signUpButton(),
-              SizedBox(
-                height: 20,
-              ),
-              _label()
-            ],
-          ),
-        ),
-      ),
+      body: Body(),
     );
   }
 }

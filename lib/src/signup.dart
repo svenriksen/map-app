@@ -7,6 +7,7 @@ import 'package:hi_world/src/loginPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hi_world/src/Global.dart';
 
+import 'package:hi_world/src/signupComponents/body.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);
@@ -40,7 +41,6 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-
 
   Widget _submitButton() {
     return InkWell(
@@ -134,10 +134,8 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: const EdgeInsets.all(8.0),
           child: TextField(
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: 'Email'
-            ),
-            onChanged: (value){
+            decoration: InputDecoration(hintText: 'Email'),
+            onChanged: (value) {
               _email = value.trim();
             },
           ),
@@ -146,10 +144,8 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: const EdgeInsets.all(8.0),
           child: TextField(
             obscureText: true,
-            decoration: InputDecoration(
-              hintText: 'Password'
-            ),
-            onChanged: (value){
+            decoration: InputDecoration(hintText: 'Password'),
+            onChanged: (value) {
               _password = value.trim();
             },
           ),
@@ -158,58 +154,23 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  _signup(String _email, String _password) async{
-    try{
-      await auth.createUserWithEmailAndPassword(email: _email, password: _password);
+  _signup(String _email, String _password) async {
+    try {
+      await auth.createUserWithEmailAndPassword(
+          email: _email, password: _password);
 
       //NEU THANH CONG
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
-    } on FirebaseAuthException catch (error){
+    } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.TOP);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .2),
-                    _title(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _emailPasswordNameWidget(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _submitButton(),
-                    SizedBox(height: height * .14),
-                    _loginAccountLabel(),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(top: 40, left: 0, child: _backButton()),
-          ],
-        ),
-      ),
+      body: Body(),
     );
   }
 }

@@ -8,7 +8,7 @@ import 'package:hi_world/src/Global.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Widget/bezierContainer.dart';
+import 'package:hi_world/src/loginComponents/body.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String tempUsername = prefs.getString('username');
       String tempPassWord = prefs.getString('Password');
-      if (tempUsername == "" && tempPassWord == "") {
+      if (!prefs.containsKey('username') || !prefs.containsKey('password')) {
         prefs.setString('username', _email);
         prefs.setString('password', _password);
       }
@@ -198,45 +198,8 @@ _signin(String _email, String _password) {
  */
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: Container(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer()),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .2),
-                  _title(),
-                  SizedBox(height: 50),
-                  _emailPasswordWidget(),
-                  SizedBox(height: 20),
-                  _submitButton(),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.centerRight,
-                    child: Text('Forgot Password ?',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
-                  ),
-                  SizedBox(height: height * .055),
-                  _createAccountLabel(),
-                ],
-              ),
-            ),
-          ),
-          Positioned(top: 40, left: 0, child: _backButton()),
-        ],
-      ),
-    ));
+      body: Body(),
+    );
   }
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
+//import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_world/src/GPS.dart';
 import 'package:hi_world/src/Widget/Tabs.dart';
 import 'package:hi_world/src/welcomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui' as ui;
 
 // ignore: camel_case_types
 class UserPage extends StatefulWidget {
@@ -26,6 +28,14 @@ class UserPage_State extends State<UserPage> {
         //elevation: 30,
         centerTitle: true,
         automaticallyImplyLeading: false,
+
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.pink, Colors.orange],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight)),
+        ),
         title: Text("GPS TRACKER"),
         leading: new IconButton(
             icon: Icon(Icons.logout),
@@ -43,8 +53,12 @@ class UserPage_State extends State<UserPage> {
         currentIndex: this.selectedIndex,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.navigation_outlined),
-            title: Text("Map"),
+            icon: Icon(
+              Icons.navigation_outlined,
+            ),
+            title: Text(
+              'Map',
+            ),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -53,7 +67,7 @@ class UserPage_State extends State<UserPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.group),
             title: Text("Other Users"),
-          )
+          ),
         ],
         onTap: (int index) {
           this.onTapHandler(index);
