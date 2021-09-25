@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "656580421204",
+    "project_id": "gpstracker-8171e",
+    "storage_bucket": "gpstracker-8171e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656580421204:android:cf9d8aaf05daab24622fc1",
+        "android_client_info": {
+          "package_name": "com.example.hi_world"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "656580421204-bj2oepsed9fjo1mmchqf1brgksh50e5c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4haKHyR31U_C5aTzaY65eusMdzh75N3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "656580421204-bj2oepsed9fjo1mmchqf1brgksh50e5c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

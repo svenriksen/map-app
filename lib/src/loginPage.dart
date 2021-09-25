@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hi_world/src/UserPage.dart';
-import 'package:hi_world/src/welcomePage.dart';
 import 'package:hi_world/src/signup.dart';
 import 'package:hi_world/src/Global.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hi_world/src/welcomePage.dart';
 
-import 'package:hi_world/src/loginComponents/body.dart';
+import 'Widget/bezierContainer.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -27,7 +26,8 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => WelcomePage()));
+            context, MaterialPageRoute(builder: (context) => WelcomePage())
+        );
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -72,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 
   Widget _createAccountLabel() {
     return InkWell(
@@ -137,8 +138,10 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(8.0),
           child: TextField(
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(hintText: 'Email'),
-            onChanged: (value) {
+            decoration: InputDecoration(
+                hintText: 'Email'
+            ),
+            onChanged: (value){
               _email = value;
             },
           ),
@@ -148,8 +151,10 @@ class _LoginPageState extends State<LoginPage> {
           child: TextField(
             obscureText: true,
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(hintText: 'Password'),
-            onChanged: (value) {
+            decoration: InputDecoration(
+                hintText: 'Password'
+            ),
+            onChanged: (value){
               _password = value;
             },
           ),
@@ -157,40 +162,30 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
-
   // /*
-  String Extract(String str) {
+  String Extract(String str){
     String res = "";
     int i = 0;
-    while (str[i] != "@") {
+    while(str[i] != "@") {
       res += str[i];
       ++i;
     }
     return res;
   }
-
-  _signin(String _email, String _password) async {
-    try {
-      await auth.signInWithEmailAndPassword(email: _email, password: _password);
-      Credentials.email = _email;
-      Credentials.name = Extract(Credentials.email);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String tempUsername = prefs.getString('username');
-      String tempPassWord = prefs.getString('Password');
-      if (!prefs.containsKey('username') || !prefs.containsKey('password')) {
-        prefs.setString('username', _email);
-        prefs.setString('password', _password);
-      }
+  _signin(String _email, String _password) async{
+    try{
+       await auth.signInWithEmailAndPassword(email: _email, password: _password);
+        Credentials.email = _email;
+        Credentials.name = Extract(Credentials.email);
       //NEU THANH CONG
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => UserPage()));
-    } on FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error){
       Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.TOP);
     }
   }
-
   // */
-  /*
+ /*
 _signin(String _email, String _password) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => GPS_tracker()));
@@ -198,8 +193,45 @@ _signin(String _email, String _password) {
  */
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Body(),
-    );
+        body: Container(
+          height: height,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                  top: -height * .15,
+                  right: -MediaQuery.of(context).size.width * .4,
+                  child: BezierContainer()),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height * .2),
+                      _title(),
+                      SizedBox(height: 50),
+                      _emailPasswordWidget(),
+                      SizedBox(height: 20),
+                      _submitButton(),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.centerRight,
+                        child: Text('Forgot Password ?',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500)),
+                      ),
+                      SizedBox(height: height * .055),
+                      _createAccountLabel(),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(top: 40, left: 0, child: _backButton()),
+            ],
+          ),
+        ));
   }
 }

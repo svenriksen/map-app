@@ -4,9 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hi_world/src/Global.dart';
-import 'package:hi_world/src/GPS.dart';
 
 class MyProfile extends StatelessWidget {
   @override
@@ -39,7 +37,8 @@ class MyProfile extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    Credentials.name,
+                    //Credentials.name,
+                    'YOUR NAME',
                     style: TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
@@ -76,3 +75,66 @@ class MyProfile extends StatelessWidget {
   }
 }
 
+class OtherUsers extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final databaseRef = FirebaseDatabase.instance.reference();
+    DatabaseReference _userRef =
+        databaseRef.reference().child(Credentials.name).child('Other Users');
+    String UserName;
+    return Scaffold(
+        body: SingleChildScrollView(
+            child: Column(
+      children: [
+        Center(
+            child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Text(
+                "Other users",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              TextField(
+                decoration: InputDecoration(hintText: "Username"),
+                onChanged: (value) {
+                  UserName = value;
+                },
+                textAlign: TextAlign.center,
+              ),
+              FlatButton(
+                  color: Colors.lightBlueAccent,
+                  onPressed: () {
+                    databaseRef
+                        .child(Credentials.name)
+                        .child('Other Users')
+                        .push()
+                        .set({
+                      'Name': UserName,
+                    });
+                  },
+                  child: Text('ADD')),
+              Flexible(
+                  child: new FirebaseAnimatedList(
+                      shrinkWrap: true,
+                      query: _userRef,
+                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                          Animation<double> animation, int index) {
+                        return new ListTile(
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () =>
+                                _userRef.child(snapshot.key).remove(),
+                          ),
+                          title: new Text(snapshot.value['Name']),
+                        );
+                      }))
+            ],
+          ),
+        ))
+      ],
+    )));
+  }
+}

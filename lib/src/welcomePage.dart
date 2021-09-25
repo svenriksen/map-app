@@ -1,13 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hi_world/src/UserPage.dart';
-import 'package:hi_world/src/signup.dart';
-import 'package:hi_world/src/Global.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hi_world/src/loginPage.dart';
-import 'package:hi_world/src/welcomeComponents/body.dart';
+import 'package:hi_world/src/signup.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);
@@ -121,65 +115,47 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  String username = "";
-  String password = "";
-  final auth = FirebaseAuth.instance;
-
-  String Extract(String str) {
-    String res = "";
-    int i = 0;
-    while (str[i] != "@") {
-      res += str[i];
-      ++i;
-    }
-    return res;
-  }
-
-  @override
-  void initState() {
-    getData();
-  }
-
-  getData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      username = prefs.getString('username');
-      password = prefs.getString('password');
-      print(username);
-      print(password);
-    });
-  }
-
-  autoSignin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      username = prefs.getString('username');
-      password = prefs.getString('password');
-    });
-
-    if (prefs.containsKey('username') && prefs.containsKey('password')) {
-      try {
-        await auth.signInWithEmailAndPassword(
-            email: username, password: password);
-        Credentials.email = username;
-        Credentials.name = Extract(Credentials.email);
-        print("logged in");
-        print(username);
-        print(password);
-        //NEU THANH CONG
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserPage()));
-      } on FirebaseAuthException catch (error) {
-        Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.TOP);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    //autoSignin();
     return Scaffold(
-      body: Body(),
+      body:SingleChildScrollView(
+        child:Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey.shade200,
+                    offset: Offset(2, 4),
+                    blurRadius: 5,
+                    spreadRadius: 2)
+              ],
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xfffbb448), Color(0xffe46b10)])),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _title(),
+              SizedBox(
+                height: 80,
+              ),
+              _submitButton(),
+              SizedBox(
+                height: 20,
+              ),
+              _signUpButton(),
+              SizedBox(
+                height: 20,
+              ),
+              _label()
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

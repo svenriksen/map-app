@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,71 +8,46 @@ import 'package:geocoding/geocoding.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:hi_world/src/Global.dart';
 
-// ignore_for_file: camel_case_types
-// ignore_for_file: non_constant_identifier_names
-
-final gps_key = new GlobalKey<MapState>();
-
+// ignore: camel_case_types
 class GPS_tracker extends StatefulWidget {
+  GPS_tracker({this.app});
+  final FirebaseApp app;
   @override
-  MapState createState() => MapState();
+  _MapState createState() => _MapState();
 }
 
-final Set<Marker> markers = new Set<Marker>();
-
-// ignore: non_constant_identifier_names
-class MapState extends State<GPS_tracker> {
+class _MapState extends State<GPS_tracker> {
   Completer<GoogleMapController> controller1;
 
   //static LatLng _center = LatLng(-15.4630239974464, 28.363397732282127);
-  static LatLng _initialPosition = LatLng(10.7901095, 106.6553449);
-
+  static LatLng _initialPosition =
+      LatLng(-15.4630239974464, 28.363397732282127);
+  final Set<Marker> _markers = {};
   static LatLng _lastMapPosition = _initialPosition;
-  /*
-  _createMarkers(double lat, double long) {
-    print(lat);
-    print(long);
-    var markerIdVal = markers.length + 1;
-    String mar = markerIdVal.toString();
-    final MarkerId markerId = MarkerId(mar);
-    final Marker marker =
-        Marker(markerId: markerId, position: LatLng(lat, long));
 
-/*
-    setState(() {
-      markers.add(marker);
-    });
-  */
-    markers.add(marker);
-  }
-
-  // */
-  /*
-  _createMarkers() {
-
-  }
-
-   */
   /// FIREBASE
   final databaseRef = FirebaseDatabase.instance.reference();
   final Future<FirebaseApp> _future = Firebase.initializeApp();
 
   Future add_Location(double lat, double long) async {
+    int count = 0;
+    /*
     while(true){
+      ++count;
       await new Future.delayed(new Duration(seconds: 5));
       databaseRef
           .child(Credentials.name)
-          .update({'Latitude': lat, 'Longitude': long});
+          .update({'Latitude': lat, 'Longitude': long, 'Test' : count});
     }
-
+*/
   }
 
   ///
   @override
   void initState() {
     super.initState();
-    _getOtherUsersLocation();
     _getUserLocation();
+    //_getOtherUsersLocation();
   }
 
   void _getUserLocation() async {
@@ -83,16 +57,20 @@ class MapState extends State<GPS_tracker> {
         await placemarkFromCoordinates(position.latitude, position.longitude);
     setState(() {
       _initialPosition = LatLng(position.latitude, position.longitude);
-      // _createMarkers(position.latitude, position.longitude);
       print('${placemark[0].name}');
     });
     print(position.latitude);
   }
 
-  void _getOtherUsersLocation() async {
+  void _getOtherUsersLocation() async{
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     add_Location(position.latitude, position.longitude);
+  }
+  _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      controller1.complete(controller);
+    });
   }
 
   MapType _currentMapType = MapType.hybrid;
@@ -131,13 +109,13 @@ class MapState extends State<GPS_tracker> {
               return Container(
                 child: Stack(children: <Widget>[
                   GoogleMap(
-                    markers: markers,
+                    markers: _markers,
                     mapType: _currentMapType,
                     initialCameraPosition: CameraPosition(
                       target: _initialPosition,
                       zoom: 14.4746,
                     ),
-                    onMapCreated: (GoogleMapController controller) {},
+                    onMapCreated: _onMapCreated,
                     zoomGesturesEnabled: true,
                     onCameraMove: _onCameraMove,
                     myLocationEnabled: true,
@@ -167,110 +145,5 @@ class MapState extends State<GPS_tracker> {
             }
           }),
     );
-  }
-}
-
-/// NOT THE GPS
-class OtherUsers extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    double long = 0, lat = 0;
-
-    final databaseRef = FirebaseDatabase.instance.reference();
-    DatabaseReference _userRef, _userRefLat, _userRefLong;
-    _userRef =
-        databaseRef.reference().child(Credentials.name).child('Other Users');
-
-    String UserName;
-
-    var markerIdVal;
-    String mar;
-    MarkerId markerId;
-    Marker marker;
-
-    return Scaffold(
-        body: SingleChildScrollView(
-            child: Column(
-      children: [
-        Center(
-            child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Text(
-                "Other users",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: "Username"),
-                onChanged: (value) {
-                  UserName = value;
-                },
-                textAlign: TextAlign.center,
-              ),
-              FlatButton(
-                  color: Colors.lightBlueAccent,
-                  onPressed: () {
-                    databaseRef
-                        .child(Credentials.name)
-                        .child('Other Users')
-                        .push()
-                        .set({
-                      'Name': UserName,
-                    });
-                  },
-                  child: Text('ADD')),
-              Flexible(
-                  child: new FirebaseAnimatedList(
-                      shrinkWrap: true,
-                      query: _userRef,
-                      itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                          Animation<double> animation, int index) {
-                        return new ListTile(
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () =>
-                                _userRef.child(snapshot.key).remove(),
-                          ),
-                          title: new Text(snapshot.value['Name']),
-                          onTap: () async => {
-                            _userRefLat = databaseRef
-                                .reference()
-                                .child(snapshot.value['Name'])
-                                .child('Latitude'),
-                            _userRefLong = databaseRef
-                                .reference()
-                                .child(snapshot.value['Name'])
-                                .child('Longitude'),
-                            _userRefLat.once().then((DataSnapshot snapshot) {
-                              lat = snapshot.value;
-                            }),
-                            _userRefLong.once().then((DataSnapshot snapshot) {
-                              long = snapshot.value;
-                            }),
-                            await Future.delayed(
-                                const Duration(seconds: 2), () {}),
-                            print(lat),
-                            print(long),
-
-                              markerIdVal = markers.length + 1,
-                              mar = markerIdVal.toString(),
-                              markerId = MarkerId(mar),
-                              marker = Marker(
-                                  markerId: markerId,
-                                  position: LatLng(lat, long)),
-                              markers.add(marker),
-
-                            print(markers.length),
-                          },
-                        );
-                      }))
-            ],
-          ),
-        ))
-      ],
-    )));
   }
 }
