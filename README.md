@@ -1,3 +1,5 @@
+#It was me, I asked
+
 # Finding Nemo 
 An Android application to detect the geographical locations of other users and to demonstrate them on a satellite map.
 ## Getting Started
