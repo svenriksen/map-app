@@ -1,5 +1,3 @@
-# It was me, I asked
-
 # Finding Nemo 
 An Android application to detect the geographical locations of other users and to demonstrate them on a satellite map.
 ## Getting Started
@@ -14,5 +12,3 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
-
-Hadn't it been for the support from Google, StackOverFlow, Youtube, and Flutter community, we wouldn't have been able to conduct our first-time application project.
